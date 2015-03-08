@@ -7,9 +7,9 @@ import java.util.HashSet;
  */
 public interface IPlayer {
 	boolean play();
-	boolean play(IPlayable playable);
-	boolean setPlayable(IPlayable playable);
-	IPlayable getPlayable();
-	boolean isPlayable(IPlayable file);
+	boolean play(Playable playable);
+	void setPlayable(Playable playable);
+	Playable getPlayable();
+	boolean isExtensionPlayable(Playable file);
 	HashSet<String> getPlayableFileTypes();
 }

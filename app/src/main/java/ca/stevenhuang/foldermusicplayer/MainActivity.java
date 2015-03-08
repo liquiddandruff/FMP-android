@@ -1,6 +1,7 @@
 package ca.stevenhuang.foldermusicplayer;
 
 import android.graphics.Color;
+import android.media.MediaMetadataRetriever;
 import android.os.Environment;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v7.app.ActionBarActivity;
@@ -30,10 +31,10 @@ import de.keyboardsurfer.android.widget.crouton.Crouton;
 import de.keyboardsurfer.android.widget.crouton.Style;
 
 public class MainActivity extends ActionBarActivity {
-	public enum Section {
+	public static enum Section {
 		MUSIC_ROOT(10, "TAG1"),
-		INFO(20, "TAG2"),
-		SETTINGS(30, "TAG3");
+		SETTINGS(20, "TAG2"),
+		INFO(30, "TAG3");
 		public final int id;
 		public final String tag;
 		private Section(int id, String tag) {
@@ -41,43 +42,64 @@ public class MainActivity extends ActionBarActivity {
 			this.tag = tag;
 		}
 	}
+	private static MediaMetadataRetriever mMetadata;
 	private static IPlayer mPlayer;
 	private Drawer.Result leftDrawer;
 	private Drawer.Result rightDrawer;
-	public File rootMusicDir;
+	private File rootMusicDir;
+
+	public void playFile(File filePath) {
+		Crouton.cancelAllCroutons();
+		Playable p = new Playable(filePath.getPath());
+		mPlayer.setPlayable(p);
+		//Crouton.makeText(this, "File " + filePath + " is not a playable file type", Style.ALERT).show();
+		if(!mPlayer.play()) {
+			Crouton.makeText(this, "File " + p + " cannot be played", Style.ALERT).show();
+		}
+		mMetadata.setDataSource(p.getPath());
+		String s1 = mMetadata.extractMetadata(MediaMetadataRetriever.METADATA_KEY_BITRATE);
+		String s2 = mMetadata.extractMetadata(MediaMetadataRetriever.METADATA_KEY_ALBUM);
+		String s3 = mMetadata.extractMetadata(MediaMetadataRetriever.METADATA_KEY_ARTIST);
+		String s4 = mMetadata.extractMetadata(MediaMetadataRetriever.METADATA_KEY_GENRE);
+		String s5 = mMetadata.extractMetadata(MediaMetadataRetriever.METADATA_KEY_DURATION);
+		debug("metadata %s,%s,%s,%s,%s",s1,s2,s3,s4,s5);
+		Crouton.makeText(this, "Now playing " + p.getName(), Style.CONFIRM).show();
+	}
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
+		debug("onCreate");
 		setContentView(R.layout.activity_main);
 
 		final Toolbar toolbar = (Toolbar) findViewById(R.id.activity_main_toolbar);
 		toolbar.setTitleTextColor(Color.WHITE);
 		setSupportActionBar(toolbar);
 
+		rootMusicDir = new File(Environment.getExternalStorageDirectory(), "Music");
+
+		Bundle data = new Bundle(1);
+		data.putString(Const.KEY_ROOT, rootMusicDir.getPath());
+
 		FragmentTransaction fragTrans = getSupportFragmentManager().beginTransaction();
-		final BaseFragment libNav = new LibraryFragment();
-		fragTrans.add(R.id.fragment_container, libNav, Section.MUSIC_ROOT.tag);
+		final LibraryFragment fragment = new LibraryFragment();
+		fragment.setOnFileSelectionListener(new LibraryFragment.OnFileSelectionListener() {
+			@Override
+			public void onFileSelection(File file) {
+				playFile(file);
+			}
+		});
+		fragment.setArguments(data);
+		fragTrans.add(R.id.fragment_container, fragment, Section.MUSIC_ROOT.tag);
 		fragTrans.setTransition(FragmentTransaction.TRANSIT_FRAGMENT_FADE);
 		fragTrans.commit();
 
-		if(mPlayer == null)
+		if(mPlayer == null) {
+			debug("mPlayer is null, recreating...");
 			mPlayer = new Player();
+		}
+		mMetadata  = new MediaMetadataRetriever();
 
-		rootMusicDir = new File(Environment.getExternalStorageDirectory(), "Music");
-		File fileList[] = rootMusicDir.listFiles();
-		for(File file : fileList) {
-			Log.d("4242", file.toString());
-		}
-		File filePath = new File(rootMusicDir, "a.mp3");
-
-		IPlayable test = new Playable(filePath);
-		if(!mPlayer.setPlayable(test)) {
-			Crouton.makeText(this, "File " + filePath + " is not a playable file type", Style.ALERT).show();
-		}
-		if(!mPlayer.play()) {
-			Crouton.makeText(this, "File " + filePath + " cannot be played", Style.ALERT).show();
-		}
 
 		leftDrawer = new Drawer()
 			.withActivity(this)
@@ -158,5 +180,9 @@ public class MainActivity extends ActionBarActivity {
 			return true;
 		}
 		return super.onOptionsItemSelected(item);
+	}
+
+	private void debug(String s, Object ... args) {
+		Log.d(this.getClass().getSimpleName(), String.format(s, args));
 	}
 }

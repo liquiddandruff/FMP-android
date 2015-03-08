@@ -2,7 +2,6 @@ package ca.stevenhuang.foldermusicplayer.MusicLibraryNav;
 
 import android.app.Activity;
 import android.os.Bundle;
-import android.os.Environment;
 import android.util.Log;
 import android.view.KeyEvent;
 import android.view.LayoutInflater;
@@ -16,6 +15,7 @@ import java.util.ArrayList;
 import java.util.Arrays;
 
 import ca.stevenhuang.foldermusicplayer.BaseFragment;
+import ca.stevenhuang.foldermusicplayer.Const;
 import ca.stevenhuang.foldermusicplayer.MainActivity;
 import ca.stevenhuang.foldermusicplayer.R;
 import de.keyboardsurfer.android.widget.crouton.Crouton;
@@ -35,16 +35,16 @@ public class LibraryFragment extends BaseFragment {
 	private int mCurrDirMarker = -1;
 	private ArrayList<LibraryItem> mCurrDirAdapterData;
 
+	private OnFileSelectionListener mOnFileSelectionListener;
+
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
-		debug("onCreate");
+		Bundle data = getArguments();
+		String root =  data.getString(Const.KEY_ROOT);
+		debug("onCreate, mybundle: %s %s      savedbundle: %s", data.toString(), root, savedInstanceState);
 		final Activity activity = getActivity();
-		if(activity instanceof MainActivity) {
-			mRootDir = ((MainActivity)activity).rootMusicDir;
-		} else {
-			mRootDir = Environment.getExternalStorageDirectory();
-		}
+		mRootDir = new File(root);
 		mCurrDir = mRootDir;
 
 		if(mAdapter == null) {
@@ -77,12 +77,15 @@ public class LibraryFragment extends BaseFragment {
 						scrollTo(0);
 					} else if (position - mCurrDirFolders.length < mCurrDirFiles.length) {
 						clicked = mCurrDirFiles[position - mCurrDirFolders.length];
+						if(mOnFileSelectionListener != null) {
+							mOnFileSelectionListener.onFileSelection(clicked);
+						}
 					} else {
 						return;
 					}
 					debug("Clicked %d : %s", position, clicked.getName());
-					Crouton.cancelAllCroutons();
-					Crouton.makeText((MainActivity) view.getContext(), clicked.getName(), Style.CONFIRM).show();
+					//Crouton.cancelAllCroutons();
+					//Crouton.makeText((MainActivity) view.getContext(), clicked.getName(), Style.CONFIRM).show();
 				}
 			}
 		});
@@ -118,6 +121,7 @@ public class LibraryFragment extends BaseFragment {
 				return true;
 			}
 		}
+		debug("returned false");
 		return false;
 	}
 
@@ -162,6 +166,14 @@ public class LibraryFragment extends BaseFragment {
 
 	public void scrollTo(int pos) {
 		fileList.setSelection(pos);
+	}
+
+	public void setOnFileSelectionListener(OnFileSelectionListener listener) {
+		mOnFileSelectionListener = listener;
+	}
+
+	public interface OnFileSelectionListener {
+		abstract public void onFileSelection(File file);
 	}
 
 	private void debug(String s, Object ... args) {

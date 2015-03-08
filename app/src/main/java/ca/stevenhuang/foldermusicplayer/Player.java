@@ -11,15 +11,19 @@ import java.util.HashSet;
  */
 public class Player implements IPlayer{
 	private static final HashSet<String> PLAYABLE_FILE_TYPES = new HashSet<String>(Arrays.asList(
-			"mp3", "flac", "midi", "vorbis", "pcm", "wave", "aac"
+			"3gp", "mp4", "m4a", "aac", "ts",
+			"flac", "mp3",
+			"mid", "xmf", "mxmf", "rtttl", "rtx", "ota", "imy",
+			"ogg", "mkv",
+			"wav"
 	));
 
 	private MediaPlayer mPlayer;
-	private IPlayable currentPlayable;
+	private Playable currentPlayable;
 
 	public Player() {
 		mPlayer = new MediaPlayer();
-		currentPlayable = new Playable();
+		currentPlayable = null;
 	}
 
 	@Override
@@ -28,9 +32,10 @@ public class Player implements IPlayer{
 	}
 
 	@Override
-	public boolean play(IPlayable playable) {
+	public boolean play(Playable playable) {
 		try {
-			mPlayer.setDataSource(playable.getFile().toString());
+			mPlayer.reset();
+			mPlayer.setDataSource(playable.toString());
 			mPlayer.prepare();
 			mPlayer.start();
 			return true;
@@ -41,22 +46,17 @@ public class Player implements IPlayer{
 	}
 
 	@Override
-	public boolean setPlayable(IPlayable playable) {
-		if(isPlayable(playable)) {
-			currentPlayable = playable;
-			return true;
-		} else {
-			return false;
-		}
+	public void setPlayable(Playable playable) {
+		currentPlayable = playable;
 	}
 
 	@Override
-	public IPlayable getPlayable() {
+	public Playable getPlayable() {
 		return currentPlayable;
 	}
 
 	@Override
-	public boolean isPlayable(IPlayable playable) {
+	public boolean isExtensionPlayable(Playable playable) {
 		final String fileName = playable.toString();
 		final int lastDotIndex = fileName.lastIndexOf('.');
 		String fileExt = fileName.substring(lastDotIndex + 1);
