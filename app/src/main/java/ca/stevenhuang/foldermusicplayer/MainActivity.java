@@ -48,22 +48,35 @@ public class MainActivity extends ActionBarActivity {
 	private Drawer.Result rightDrawer;
 	private File rootMusicDir;
 
+	public void notifyResult(boolean played) {
+		if(mPlayer != null) {
+			if(played) {
+				Crouton.makeText(this, "Now playing " + mPlayer.getPlayable(), Style.CONFIRM).show();
+			} else {
+				Crouton.makeText(this, "File " + mPlayer.getPlayable() + " cannot be played", Style.ALERT).show();
+			}
+		}
+	}
 	public void playFile(File filePath) {
 		Crouton.cancelAllCroutons();
 		Playable p = new Playable(filePath.getPath());
 		mPlayer.setPlayable(p);
-		//Crouton.makeText(this, "File " + filePath + " is not a playable file type", Style.ALERT).show();
-		if(!mPlayer.play()) {
-			Crouton.makeText(this, "File " + p + " cannot be played", Style.ALERT).show();
-		}
-		mMetadata.setDataSource(p.getPath());
-		String s1 = mMetadata.extractMetadata(MediaMetadataRetriever.METADATA_KEY_BITRATE);
-		String s2 = mMetadata.extractMetadata(MediaMetadataRetriever.METADATA_KEY_ALBUM);
-		String s3 = mMetadata.extractMetadata(MediaMetadataRetriever.METADATA_KEY_ARTIST);
-		String s4 = mMetadata.extractMetadata(MediaMetadataRetriever.METADATA_KEY_GENRE);
-		String s5 = mMetadata.extractMetadata(MediaMetadataRetriever.METADATA_KEY_DURATION);
-		debug("metadata %s,%s,%s,%s,%s",s1,s2,s3,s4,s5);
-		Crouton.makeText(this, "Now playing " + p.getName(), Style.CONFIRM).show();
+		new Thread(new Runnable() {
+			@Override
+			public void run() {
+				boolean playing = mPlayer.play();
+				notifyResult(playing);
+				if(playing) {
+					mMetadata.setDataSource(mPlayer.getPlayable().getPath());
+					String s1 = mMetadata.extractMetadata(MediaMetadataRetriever.METADATA_KEY_BITRATE);
+					String s2 = mMetadata.extractMetadata(MediaMetadataRetriever.METADATA_KEY_ALBUM);
+					String s3 = mMetadata.extractMetadata(MediaMetadataRetriever.METADATA_KEY_ARTIST);
+					String s4 = mMetadata.extractMetadata(MediaMetadataRetriever.METADATA_KEY_GENRE);
+					String s5 = mMetadata.extractMetadata(MediaMetadataRetriever.METADATA_KEY_DURATION);
+					debug("metadata %s,%s,%s,%s,%s", s1, s2, s3, s4, s5);
+				}
+			}
+		}).start();
 	}
 
 	@Override

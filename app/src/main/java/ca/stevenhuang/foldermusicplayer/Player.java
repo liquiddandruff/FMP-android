@@ -1,5 +1,6 @@
 package ca.stevenhuang.foldermusicplayer;
 
+import android.media.AudioManager;
 import android.media.MediaPlayer;
 import android.util.Log;
 
@@ -23,6 +24,7 @@ public class Player implements IPlayer{
 
 	public Player() {
 		mPlayer = new MediaPlayer();
+		mPlayer.setAudioStreamType(AudioManager.STREAM_MUSIC);
 		currentPlayable = null;
 	}
 
