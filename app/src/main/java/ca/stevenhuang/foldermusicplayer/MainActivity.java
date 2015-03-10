@@ -31,17 +31,13 @@ import de.keyboardsurfer.android.widget.crouton.Crouton;
 import de.keyboardsurfer.android.widget.crouton.Style;
 
 public class MainActivity extends ActionBarActivity {
-	public static enum Section {
-		MUSIC_ROOT(10, "TAG1"),
-		SETTINGS(20, "TAG2"),
-		INFO(30, "TAG3");
-		public final int id;
-		public final String tag;
-		private Section(int id, String tag) {
-			this.id = id;
-			this.tag = tag;
-		}
-	}
+    public static final int     DRAWER_MUSIC_ID = 10;
+    public static final String  DRAWER_MUSIC_TAG = "TAG1";
+    public static final int     DRAWER_SETTINGS_ID = 20;
+    public static final String  DRAWER_SETTINGS_TAG = "TAG2";
+    public static final int     DRAWER_INFO_ID = 30;
+    public static final String  DRAWER_INFO_TAG = "TAG3";
+
 	private static MediaMetadataRetriever mMetadata;
 	private static IPlayer mPlayer;
 	private Drawer.Result leftDrawer;
@@ -104,7 +100,7 @@ public class MainActivity extends ActionBarActivity {
 			}
 		});
 		fragment.setArguments(data);
-		fragTrans.add(R.id.fragment_container, fragment, Section.MUSIC_ROOT.tag);
+		fragTrans.add(R.id.fragment_container, fragment, DRAWER_MUSIC_TAG);
 		fragTrans.setTransition(FragmentTransaction.TRANSIT_FRAGMENT_FADE);
 		fragTrans.commit();
 
@@ -120,9 +116,9 @@ public class MainActivity extends ActionBarActivity {
 			.withToolbar(toolbar)
 			.withDrawerGravity(Gravity.LEFT)
 			.addDrawerItems(
-				new PrimaryDrawerItem().withIdentifier(Section.MUSIC_ROOT.id).withName("Home"),
+				new PrimaryDrawerItem().withIdentifier(DRAWER_MUSIC_ID).withName("Home"),
 				new DividerDrawerItem(),
-				new SecondaryDrawerItem().withIdentifier(Section.SETTINGS.id).withName("Settings")
+				new SecondaryDrawerItem().withIdentifier(DRAWER_SETTINGS_ID).withName("Settings")
 			)
 			.withOnDrawerItemClickListener(new Drawer.OnDrawerItemClickListener() {
 				@Override
@@ -158,7 +154,7 @@ public class MainActivity extends ActionBarActivity {
 				return true;
 			}
 		}
-		BaseFragment f = (BaseFragment)getSupportFragmentManager().findFragmentByTag(Section.MUSIC_ROOT.tag);
+		BaseFragment f = (BaseFragment)getSupportFragmentManager().findFragmentByTag(DRAWER_MUSIC_TAG);
 		return f != null && f.onKeyDown(keyCode, event);
 	}
 
