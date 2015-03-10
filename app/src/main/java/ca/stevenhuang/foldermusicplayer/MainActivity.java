@@ -26,6 +26,7 @@ import com.mikepenz.materialdrawer.model.interfaces.IDrawerItem;
 
 import java.io.File;
 
+import ca.stevenhuang.foldermusicplayer.MusicEqualizer.EqualizerFragment;
 import ca.stevenhuang.foldermusicplayer.MusicLibraryNav.LibraryFragment;
 import de.keyboardsurfer.android.widget.crouton.Crouton;
 import de.keyboardsurfer.android.widget.crouton.Style;
@@ -123,6 +124,32 @@ public class MainActivity extends ActionBarActivity {
 			.withOnDrawerItemClickListener(new Drawer.OnDrawerItemClickListener() {
 				@Override
 				public void onItemClick(AdapterView<?> parent, View view, int position, long id, IDrawerItem drawerItem) {
+                    FragmentTransaction fragTrans = getSupportFragmentManager().beginTransaction();
+                    switch(drawerItem.getIdentifier()) {
+                        case DRAWER_MUSIC_ID: {
+                            Bundle data = new Bundle(1);
+                            data.putString(Const.KEY_ROOT, rootMusicDir.getPath());
+                            final LibraryFragment fragment = new LibraryFragment();
+                            fragment.setOnFileSelectionListener(new LibraryFragment.OnFileSelectionListener() {
+                                @Override
+                                public void onFileSelection(File file) {
+                                    playFile(file);
+                                }
+                            });
+                            fragment.setArguments(data);
+                            fragTrans.replace(R.id.fragment_container, fragment, DRAWER_MUSIC_TAG);
+                            fragTrans.setTransition(FragmentTransaction.TRANSIT_FRAGMENT_FADE);
+                            fragTrans.commit();
+                            break;
+                        }
+                        case DRAWER_SETTINGS_ID: {
+                            final EqualizerFragment fragment = new EqualizerFragment();
+                            fragTrans.replace(R.id.fragment_container, fragment, DRAWER_SETTINGS_TAG);
+                            fragTrans.setTransition(FragmentTransaction.TRANSIT_FRAGMENT_FADE);
+                            fragTrans.commit();
+                            break;
+                        }
+                    }
 				}
 			})
 			.build();
