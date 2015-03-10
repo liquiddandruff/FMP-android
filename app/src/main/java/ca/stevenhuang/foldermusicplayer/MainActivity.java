@@ -83,6 +83,7 @@ public class MainActivity extends ActionBarActivity {
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		debug("onCreate");
+		setTheme(R.style.AppTheme_Dark);
 		setContentView(R.layout.activity_main);
 
 		final Toolbar toolbar = (Toolbar) findViewById(R.id.activity_main_toolbar);

@@ -1,18 +1,10 @@
 <resources>
-
-	<style name="LightTheme" parent="android:Theme.Material.Light.NoActionBar">
-	</style>
-	<style name="DarkTheme" parent="android:Theme.Material.NoActionBar">
-	</style>
-
-	<style name="AppTheme" parent="DarkTheme">
-		<item name="android:windowAnimationStyle">@style/WindowAnimationTransition</item>
-		<item name="android:windowTranslucentNavigation">true</item>
-		<item name="android:windowTranslucentStatus">true</item>
+	<style name="ListView" parent="android:Widget.Material.ListView">
+		<item name="android:paddingTop">5dp</item>
+		<item name="android:layout_width">fill_parent</item>
+		<item name="android:layout_height">fill_parent</item>
+		<item name="android:divider">@null</item>
+		<item name="android:dividerHeight">0dp</item>
 	</style>
 
-	<style name="WindowAnimationTransition">
-		<item name="android:windowEnterAnimation">@android:anim/fade_in</item>
-		<item name="android:windowExitAnimation">@android:anim/fade_out</item>
-	</style>
 </resources>
