@@ -1,5 +1,14 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
+	<color name="dark2">#ff161616</color>
+	<color name="dark1">#ff212121</color>
+
+	<color name="list_view_dark_pressed">#ff3f3f3f</color>
+	<color name="list_view_dark_selected">#ff3f0e30</color>
+	<color name="list_view_dark_focused">#ff3f260f</color>
+	<color name="list_view_dark_default">#ff212121</color>
+	<color name="list_view_light_pressed">#ff3f3f3f</color>
+	<color name="list_view_light_default">#ff212121</color>
 	<!-- default theme colors -->
 	<color name="primary">#3F51B5</color>
 	<color name="primary_dark">#303F9F</color>

@@ -77,6 +77,7 @@ public class LibraryFragment extends BaseFragment {
 						scrollTo(0);
 					} else if (position - mCurrDirFolders.length < mCurrDirFiles.length) {
 						clicked = mCurrDirFiles[position - mCurrDirFolders.length];
+						view.setSelected(true);
 						if(mOnFileSelectionListener != null) {
 							mOnFileSelectionListener.onFileSelection(clicked);
 						}
@@ -103,7 +104,8 @@ public class LibraryFragment extends BaseFragment {
 				}
 				Crouton.cancelAllCroutons();
 				Crouton.makeText((MainActivity) view.getContext(), "LongClick: " + clicked.getName(), Style.CONFIRM).show();
-				return true;
+				//return true;
+				return false;
 			}
 		});
 		return view;

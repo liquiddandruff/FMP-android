@@ -1,6 +1,7 @@
 <resources>
 	<style name="AppTheme" parent="Theme.AppCompat.NoActionBar">
 		<item name="android:windowAnimationStyle">@style/WindowAnimationTransition</item>
+		<item name="libraryListViewRow">@style/ListViewRow</item>
 	</style>
 
 	<style name="AppTheme.Light" parent="AppTheme">
@@ -28,14 +29,22 @@
 		<item name="android:layout_height">fill_parent</item>
 		<item name="android:divider">@null</item>
 		<item name="android:dividerHeight">0dp</item>
+		<item name="android:drawSelectorOnTop">true</item>
 	</style>
 
 	<style name="ListView.Light" parent="ListView">
-		<item name="android:background">#ccc</item>
+		<item name="android:color">@color/list_view_light_default</item>
 	</style>
 
 	<style name="ListView.Dark" parent="ListView">
-		<item name="android:background">#ff212121</item>
+		<item name="android:background">@color/list_view_dark_default</item>
+	</style>
+
+	<style name="ListViewRow">
+		<item name="android:padding">5dp</item>
+		<item name="android:layout_width">fill_parent</item>
+		<item name="android:layout_height">fill_parent</item>
+		<item name="android:background">@drawable/list_view_bg_dark</item>
 	</style>
 
 	<style name="WindowAnimationTransition">
