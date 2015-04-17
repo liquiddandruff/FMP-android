@@ -25,6 +25,17 @@ public class Player implements IPlayer{
 	public Player() {
 		mPlayer = new MediaPlayer();
 		mPlayer.setAudioStreamType(AudioManager.STREAM_MUSIC);
+		mPlayer.setOnCompletionListener(new MediaPlayer.OnCompletionListener() {
+			@Override
+			public void onCompletion(MediaPlayer mp) {
+				try {
+					mp.stop();
+					mp.prepare();
+					mp.start();
+				} catch (Exception e) {
+				}
+			}
+		});
 		currentPlayable = null;
 	}
 
