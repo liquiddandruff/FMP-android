@@ -98,7 +98,7 @@ public class MainActivity extends ActionBarActivity {
 
 		if (mPlayer == null) {
 			debug("mPlayer is null, recreating...");
-			mPlayer = new Player();
+			mPlayer = new Player(getApplicationContext());
 		}
 		mMetadata = new MediaMetadataRetriever();
 

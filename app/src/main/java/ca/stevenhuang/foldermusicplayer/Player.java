@@ -1,7 +1,9 @@
 package ca.stevenhuang.foldermusicplayer;
 
+import android.content.Context;
 import android.media.AudioManager;
 import android.media.MediaPlayer;
+import android.os.PowerManager;
 import android.util.Log;
 
 import java.util.Arrays;
@@ -22,8 +24,9 @@ public class Player implements IPlayer{
 	private MediaPlayer mPlayer;
 	private Playable currentPlayable;
 
-	public Player() {
+	public Player(Context context) {
 		mPlayer = new MediaPlayer();
+		mPlayer.setWakeMode(context, PowerManager.PARTIAL_WAKE_LOCK);
 		mPlayer.setAudioStreamType(AudioManager.STREAM_MUSIC);
 		mPlayer.setOnCompletionListener(new MediaPlayer.OnCompletionListener() {
 			@Override

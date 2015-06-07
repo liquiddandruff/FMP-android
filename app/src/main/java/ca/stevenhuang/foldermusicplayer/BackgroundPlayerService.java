@@ -25,7 +25,7 @@ public class BackgroundPlayerService extends Service {
 	@Override
 	public void onCreate() {
 		super.onCreate();
-		mPlayer = new Player();
+		mPlayer = new Player(getApplicationContext());
 		debug("onCreate");
 	}
 
