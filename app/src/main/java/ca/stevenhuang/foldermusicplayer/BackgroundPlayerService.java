@@ -60,15 +60,21 @@ public class BackgroundPlayerService extends Service {
 			stopIntent.setAction(Const.ACTION.STOP_FOREGROUND);
 			PendingIntent stopPI = PendingIntent.getService(this, 0, stopIntent, 0);
 
-			RemoteViews rv = new RemoteViews(getPackageName(), R.layout.background_service);
-			rv.setOnClickPendingIntent(R.id.service_panel, toMainAppPI);
-			rv.setOnClickPendingIntent(R.id.service_prev, prevPI);
-			rv.setOnClickPendingIntent(R.id.service_play, playPI);
-			rv.setOnClickPendingIntent(R.id.service_next, nextPI);
-			rv.setOnClickPendingIntent(R.id.service_exit, stopPI);
+			RemoteViews smallRV = new RemoteViews(getPackageName(), R.layout.background_service_small);
+			smallRV.setOnClickPendingIntent(R.id.service_panel, toMainAppPI);
+			smallRV.setOnClickPendingIntent(R.id.service_prev, prevPI);
+			smallRV.setOnClickPendingIntent(R.id.service_play, playPI);
+			smallRV.setOnClickPendingIntent(R.id.service_next, nextPI);
+
+			RemoteViews bigRV = new RemoteViews(getPackageName(), R.layout.background_service_big);
+			bigRV.setOnClickPendingIntent(R.id.service_panel, toMainAppPI);
+			bigRV.setOnClickPendingIntent(R.id.service_prev, prevPI);
+			bigRV.setOnClickPendingIntent(R.id.service_play, playPI);
+			bigRV.setOnClickPendingIntent(R.id.service_next, nextPI);
+			bigRV.setOnClickPendingIntent(R.id.service_exit, stopPI);
 
 			Notification notification = new NotificationCompat.Builder(this)
-					.setContent(rv)
+					.setContent(smallRV)
 					//.setContentIntent(pendingIntent)
 					//.setContentTitle("FMP")
 					//.setContentText("My Music")
@@ -83,7 +89,7 @@ public class BackgroundPlayerService extends Service {
 			//NotificationManager nm = (NotificationManager)getSystemService(Context.NOTIFICATION_SERVICE);
 			//nm.notify(Const.NOTIFICATION_ID.FOREGROUND_SERVICE, notification.build());
 
-			notification.bigContentView = rv;
+			notification.bigContentView = bigRV;
 			startForeground(Const.NOTIFICATION_ID.FOREGROUND_SERVICE, notification);
 
 		} else if (intent.getAction().equals(Const.ACTION.PREV)) {
