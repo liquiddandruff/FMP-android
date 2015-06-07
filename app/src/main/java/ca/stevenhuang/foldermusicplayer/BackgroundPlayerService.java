@@ -42,30 +42,30 @@ public class BackgroundPlayerService extends Service {
 			notificationIntent.setAction(Const.ACTION.MAIN_ACTIVITY);
 			notificationIntent.addCategory(Intent.CATEGORY_HOME);
 			//notificationIntent.setFlags(Intent.FLAG_ACTIVITY_REORDER_TO_FRONT | Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_SINGLE_TOP);
-			PendingIntent pendingIntent = PendingIntent.getActivity(this, 0, notificationIntent, PendingIntent.FLAG_UPDATE_CURRENT);
+			PendingIntent toMainAppPI = PendingIntent.getActivity(this, 0, notificationIntent, PendingIntent.FLAG_UPDATE_CURRENT);
 
 			Intent previousIntent = new Intent(this, BackgroundPlayerService.class);
 			previousIntent.setAction(Const.ACTION.PREV);
-			PendingIntent ppreviousIntent = PendingIntent.getService(this, 0, previousIntent, 0);
+			PendingIntent prevPI = PendingIntent.getService(this, 0, previousIntent, 0);
 
 			Intent playIntent = new Intent(this, BackgroundPlayerService.class);
 			playIntent.setAction(Const.ACTION.PLAY);
-			PendingIntent pplayIntent = PendingIntent.getService(this, 0, playIntent, 0);
+			PendingIntent playPI = PendingIntent.getService(this, 0, playIntent, 0);
 
 			Intent nextIntent = new Intent(this, BackgroundPlayerService.class);
 			nextIntent.setAction(Const.ACTION.NEXT);
-			PendingIntent pnextIntent = PendingIntent.getService(this, 0, nextIntent, 0);
+			PendingIntent nextPI = PendingIntent.getService(this, 0, nextIntent, 0);
 
 			Intent stopIntent = new Intent(this, BackgroundPlayerService.class);
 			stopIntent.setAction(Const.ACTION.STOP_FOREGROUND);
-			PendingIntent pstopIntent = PendingIntent.getService(this, 0, stopIntent, 0);
+			PendingIntent stopPI = PendingIntent.getService(this, 0, stopIntent, 0);
 
 			RemoteViews rv = new RemoteViews(getPackageName(), R.layout.background_service);
-			rv.setOnClickPendingIntent(R.id.service_panel, pendingIntent);
-			rv.setOnClickPendingIntent(R.id.service_prev, ppreviousIntent);
-			rv.setOnClickPendingIntent(R.id.service_play, pplayIntent);
-			rv.setOnClickPendingIntent(R.id.service_next, pnextIntent);
-			rv.setOnClickPendingIntent(R.id.service_exit, pstopIntent);
+			rv.setOnClickPendingIntent(R.id.service_panel, toMainAppPI);
+			rv.setOnClickPendingIntent(R.id.service_prev, prevPI);
+			rv.setOnClickPendingIntent(R.id.service_play, playPI);
+			rv.setOnClickPendingIntent(R.id.service_next, nextPI);
+			rv.setOnClickPendingIntent(R.id.service_exit, stopPI);
 
 			Notification notification = new NotificationCompat.Builder(this)
 					.setContent(rv)
@@ -76,8 +76,8 @@ public class BackgroundPlayerService extends Service {
 					//.setLargeIcon(icon)
 					.setSmallIcon(R.drawable.ic_launcher)
 					.setOngoing(true)
-					//.addAction(android.R.drawable.ic_media_previous, "Prev", ppreviousIntent)
-					//.addAction(android.R.drawable.ic_media_play, "Play", pplayIntent)
+					//.addAction(android.R.drawable.ic_media_previous, "Prev", previousPI)
+					//.addAction(android.R.drawable.ic_media_play, "Play", playPI)
 					//.addAction(android.R.drawable.ic_delete, "Stop", pstopIntent).build();
 					.build();
 			//NotificationManager nm = (NotificationManager)getSystemService(Context.NOTIFICATION_SERVICE);
