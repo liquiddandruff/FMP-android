@@ -1,13 +1,11 @@
 <resources>
 	<style name="AppTheme" parent="Theme.AppCompat.NoActionBar">
 		<item name="android:windowAnimationStyle">@style/WindowAnimationTransition</item>
-		<item name="libraryListViewRow">@style/ListViewRow</item>
 	</style>
 
 	<style name="AppTheme.Light" parent="AppTheme">
 		<item name="colorPrimary">@color/primary_light</item>
 		<item name="colorPrimaryDark">@color/primary_light</item>
-		<item name="libraryListView">@style/ListView.Light</item>
 		<!-- http://www.materialpalette.com/indigo/light-blue
 		<item name="colorPrimary">#3F51B5</item>
 		<item name="colorPrimaryDark">#303F9F</item>
@@ -19,32 +17,15 @@
 
 	<style name="AppTheme.Dark" parent="AppTheme">
 		<item name="colorPrimary">@color/primary</item>
-		<item name="colorPrimaryDark">@color/primary</item>
-		<item name="libraryListView">@style/ListView.Dark</item>
-	</style>
-
-	<style name="ListView" parent="android:Widget.DeviceDefault.ListView">
-		<item name="android:paddingTop">5dp</item>
-		<item name="android:layout_width">fill_parent</item>
-		<item name="android:layout_height">fill_parent</item>
-		<item name="android:divider">@null</item>
-		<item name="android:dividerHeight">0dp</item>
-		<item name="android:drawSelectorOnTop">true</item>
-	</style>
-
-	<style name="ListView.Light" parent="ListView">
-		<item name="android:color">@color/list_view_light_default</item>
-	</style>
-
-	<style name="ListView.Dark" parent="ListView">
-		<item name="android:background">@color/list_view_dark_default</item>
-	</style>
-
-	<style name="ListViewRow">
-		<item name="android:padding">5dp</item>
-		<item name="android:layout_width">fill_parent</item>
-		<item name="android:layout_height">fill_parent</item>
-		<item name="android:background">@drawable/list_view_bg_dark</item>
+		<item name="colorPrimaryDark">@color/primary_dark</item>
+		<!-- AboutLibraries DARK colors -->
+		<item name="about_libraries_window_background">@color/list_view_dark_default</item>
+		<item name="about_libraries_card">@color/dark2</item>
+		<item name="about_libraries_title_openSource">#ffffffff</item>
+		<item name="about_libraries_text_openSource">#DEDEDE</item>
+		<item name="about_libraries_special_button_openSource">@color/about_libraries_special_button_openSource</item>
+		<item name="about_libraries_dividerDark_openSource">#303030</item>
+		<item name="about_libraries_dividerLight_openSource">#303030</item>
 	</style>
 
 	<style name="WindowAnimationTransition">

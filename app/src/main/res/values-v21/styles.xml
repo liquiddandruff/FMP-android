@@ -1,13 +1,4 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-	<style name="ListView" parent="android:Widget.Material.ListView">
-		<item name="android:paddingTop">5dp</item>
-		<item name="android:layout_width">fill_parent</item>
-		<item name="android:layout_height">fill_parent</item>
-		<item name="android:divider">@null</item>
-		<item name="android:dividerHeight">0dp</item>
-		<item name="android:drawSelectorOnTop">true</item>
-		<item name="android:listSelector">@drawable/selector</item>
-	</style>
 </resources>
 

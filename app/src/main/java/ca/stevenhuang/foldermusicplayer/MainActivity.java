@@ -17,6 +17,7 @@ import android.view.View;
 import android.widget.AdapterView;
 
 import com.mikepenz.aboutlibraries.Libs;
+import com.mikepenz.aboutlibraries.LibsBuilder;
 import com.mikepenz.iconics.IconicsDrawable;
 import com.mikepenz.iconics.typeface.FontAwesome;
 import com.mikepenz.materialdrawer.Drawer;
@@ -179,13 +180,13 @@ public class MainActivity extends ActionBarActivity {
 	public boolean onOptionsItemSelected(MenuItem item) {
 		int id = item.getItemId();
 		if (id == R.id.action_about) {
-			new Libs.Builder()
+			new LibsBuilder()
 					.withFields(R.string.class.getFields())
 					.withAboutIconShown(true)
 					.withAboutVersionShown(true)
 					.withAboutDescription("Your alternative folder-based music player")
 					.withActivityTitle(getString(R.string.action_about))
-							//.withActivityTheme(R.style.MaterialDrawerTheme_ActionBar)
+					.withActivityTheme(R.style.AppTheme_Dark)
 					.withLibraries("rxJava", "rxAndroid")
 					.start(this);
 			return true;

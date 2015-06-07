@@ -1,0 +1,86 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+              android:orientation="vertical"
+              android:id="@+id/service_panel"
+              android:background="@color/dark2"
+              android:layout_width="match_parent"
+              android:layout_height="100dp">
+	<TextView
+		android:id="@+id/service_title"
+		android:text="Song_Title"
+		android:textSize="20dp"
+		android:gravity="center"
+		android:layout_width="match_parent"
+		android:layout_height="30dp"
+		android:singleLine="true"/>
+	<TextView
+		android:id="@+id/service_folder"
+		android:text="Song_Folder"
+		android:gravity="center"
+		android:layout_width="match_parent"
+		android:layout_height="30dp"
+		android:layout_marginTop="-5dp"
+		android:singleLine="true"/>
+
+	<RelativeLayout
+		android:layout_width="match_parent"
+		android:layout_height="match_parent"
+		android:layout_gravity="center_horizontal">
+
+		<ImageView
+			android:layout_width="60dp"
+			android:layout_height="fill_parent"
+			android:id="@+id/service_play"
+			android:src="@drawable/ic_play_arrow_white_48dp"
+			android:layout_centerVertical="true"
+			android:layout_centerHorizontal="true"
+			android:adjustViewBounds="true"
+			android:scaleType="center"
+			android:focusable="true"
+			android:background="?android:attr/selectableItemBackgroundBorderless"
+			android:clickable="true"
+			android:longClickable="true"/>
+
+		<ImageView
+			android:layout_width="60dp"
+			android:layout_height="fill_parent"
+			android:id="@+id/service_prev"
+			android:src="@drawable/ic_skip_previous_white_24dp"
+			android:layout_centerVertical="true"
+			android:layout_toLeftOf="@+id/service_play"
+			android:layout_toStartOf="@+id/service_play"
+			android:focusable="true"
+			android:clickable="true"
+			android:cropToPadding="true"
+			android:background="?android:attr/selectableItemBackgroundBorderless"
+			android:scaleType="center"
+			android:longClickable="true"/>
+
+		<ImageView
+			android:layout_width="60dp"
+			android:layout_height="fill_parent"
+			android:id="@+id/service_next"
+			android:src="@drawable/ic_skip_next_white_24dp"
+			android:layout_centerVertical="true"
+			android:layout_toRightOf="@+id/service_play"
+			android:clickable="true"
+			android:background="?android:attr/selectableItemBackgroundBorderless"
+			android:focusable="true"
+			android:scaleType="center"
+			android:longClickable="true"/>
+
+		<ImageView
+			android:layout_width="60dp"
+			android:layout_height="fill_parent"
+			android:id="@+id/service_exit"
+			android:src="@drawable/ic_clear_white_24dp"
+			android:layout_centerVertical="true"
+			android:layout_alignParentRight="true"
+			android:layout_alignParentEnd="true"
+			android:clickable="true"
+			android:background="?android:attr/selectableItemBackgroundBorderless"
+			android:focusable="true"
+			android:scaleType="center"/>
+
+	</RelativeLayout>
+</LinearLayout>
