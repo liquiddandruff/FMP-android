@@ -19,7 +19,7 @@
 				<category android:name="android.intent.category.LAUNCHER" />
 			</intent-filter>
 		</activity>
-		<service android:name=".BackgroundPlayerService"/>
+		<service android:name=".MediaPlayerService"/>
 	</application>
 
 </manifest>

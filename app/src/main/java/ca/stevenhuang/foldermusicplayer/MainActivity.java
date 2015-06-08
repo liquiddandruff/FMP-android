@@ -1,12 +1,16 @@
 package ca.stevenhuang.foldermusicplayer;
 
+import android.content.ComponentName;
+import android.content.Context;
 import android.content.Intent;
+import android.content.ServiceConnection;
 import android.graphics.Color;
 import android.media.MediaMetadataRetriever;
 import android.os.Environment;
+import android.os.IBinder;
 import android.support.v4.app.FragmentTransaction;
-import android.support.v7.app.ActionBarActivity;
 import android.os.Bundle;
+import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.Gravity;
@@ -16,7 +20,6 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.AdapterView;
 
-import com.mikepenz.aboutlibraries.Libs;
 import com.mikepenz.aboutlibraries.LibsBuilder;
 import com.mikepenz.iconics.IconicsDrawable;
 import com.mikepenz.iconics.typeface.FontAwesome;
@@ -33,7 +36,7 @@ import ca.stevenhuang.foldermusicplayer.MusicLibraryNav.LibraryFragment;
 import de.keyboardsurfer.android.widget.crouton.Crouton;
 import de.keyboardsurfer.android.widget.crouton.Style;
 
-public class MainActivity extends ActionBarActivity {
+public class MainActivity extends AppCompatActivity {
 	public static final int DRAWER_MUSIC_ID = 10;
 	public static final String DRAWER_MUSIC_TAG = "TAG1";
 	public static final int DRAWER_SETTINGS_ID = 20;
@@ -41,8 +44,10 @@ public class MainActivity extends ActionBarActivity {
 	public static final int DRAWER_INFO_ID = 30;
 	public static final String DRAWER_INFO_TAG = "TAG3";
 
+	private static MediaPlayerService mpService;
+	private static boolean mBound;
 	private static MediaMetadataRetriever mMetadata;
-	private static IPlayer mPlayer;
+	private IPlayer mPlayer;
 	private Drawer.Result leftDrawer;
 	private Drawer.Result rightDrawer;
 	private File rootMusicDir;
@@ -59,6 +64,11 @@ public class MainActivity extends ActionBarActivity {
 
 	public void playFile(File filePath) {
 		Crouton.cancelAllCroutons();
+		if (!mBound) {
+			debug("Not bound");
+			return;
+		}
+
 		Playable p = new Playable(filePath.getPath());
 		mPlayer.setPlayable(p);
 		new Thread(new Runnable() {
@@ -77,10 +87,28 @@ public class MainActivity extends ActionBarActivity {
 				}
 			}
 		}).start();
-		Intent startIntent = new Intent(MainActivity.this, BackgroundPlayerService.class);
+
+		Intent startIntent = new Intent(MainActivity.this, MediaPlayerService.class);
 		startIntent.setAction(Const.ACTION.START_FOREGROUND);
 		startService(startIntent);
 	}
+
+	private ServiceConnection mConnection = new ServiceConnection() {
+		@Override
+		public void onServiceConnected(ComponentName name, IBinder service) {
+			debug("Service connected");
+			mBound = true;
+			mpService = ((MediaPlayerService.BackgroundPlayerBinder)service).getService();
+			mPlayer = mpService.getPlayer();
+		}
+
+		@Override
+		public void onServiceDisconnected(ComponentName name) {
+			debug("Service disconnected");
+			mpService = null;
+			mBound = false;
+		}
+	};
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -97,10 +125,10 @@ public class MainActivity extends ActionBarActivity {
 
 		switchToLibraryFragment(getSupportFragmentManager().beginTransaction());
 
-		if (mPlayer == null) {
-			debug("mPlayer is null, recreating...");
-			mPlayer = new Player(getApplicationContext());
-		}
+		//if (mPlayer == null) {
+		//	debug("mPlayer is null, recreating...");
+		//	mPlayer = new Player(getApplicationContext());
+		//}
 		mMetadata = new MediaMetadataRetriever();
 
 
@@ -146,6 +174,11 @@ public class MainActivity extends ActionBarActivity {
 					}
 				})
 				.append(leftDrawer);
+
+		Intent bindIntent = new Intent(MainActivity.this, MediaPlayerService.class);
+		//bindIntent.setAction(Const.ACTION.START_FOREGROUND);
+		//startService(bindIntent);
+		bindService(bindIntent, mConnection, Context.BIND_AUTO_CREATE);
 	}
 
 	@Override
@@ -161,12 +194,6 @@ public class MainActivity extends ActionBarActivity {
 		}
 		BaseFragment f = (BaseFragment) getSupportFragmentManager().findFragmentByTag(DRAWER_MUSIC_TAG);
 		return f != null && f.onKeyDown(keyCode, event);
-	}
-
-	@Override
-	public void onDestroy() {
-		super.onDestroy();
-		Crouton.cancelAllCroutons();
 	}
 
 	@Override
@@ -209,15 +236,28 @@ public class MainActivity extends ActionBarActivity {
 		});
 		fragment.setArguments(data);
 		fragTrans.replace(R.id.fragment_container, fragment, DRAWER_MUSIC_TAG)
-				.setTransition(FragmentTransaction.TRANSIT_FRAGMENT_FADE)
 				.commit();
 	}
 
 	public void switchToEqualizerFragment(FragmentTransaction fragTrans) {
 		final EqualizerFragment fragment = new EqualizerFragment();
 		fragTrans.replace(R.id.fragment_container, fragment, DRAWER_SETTINGS_TAG)
-				.setTransition(FragmentTransaction.TRANSIT_FRAGMENT_FADE)
 				.commit();
+	}
+
+	@Override
+	protected void onStop() {
+		super.onStop();
+		if (mBound) {
+			mBound = false;
+			unbindService(mConnection);
+		}
+	}
+
+	@Override
+	public void onDestroy() {
+		super.onDestroy();
+		Crouton.cancelAllCroutons();
 	}
 
 	private void debug(String s, Object... args) {

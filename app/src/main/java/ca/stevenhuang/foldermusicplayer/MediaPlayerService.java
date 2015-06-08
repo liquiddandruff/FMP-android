@@ -4,6 +4,7 @@ import android.app.Notification;
 import android.app.PendingIntent;
 import android.app.Service;
 import android.content.Intent;
+import android.os.Binder;
 import android.os.IBinder;
 import android.support.v4.app.NotificationCompat;
 import android.util.Log;
@@ -12,8 +13,16 @@ import android.widget.RemoteViews;
 /**
  * Created by Steven on 3/8/2015.
  */
-public class BackgroundPlayerService extends Service {
-	IPlayer mPlayer;
+public class MediaPlayerService extends Service {
+	private final IBinder mBinder = new BackgroundPlayerBinder();
+	private static IPlayer mPlayer;
+
+	public class BackgroundPlayerBinder extends Binder {
+		MediaPlayerService getService() {
+			debug("getService()");
+			return MediaPlayerService.this;
+		}
+	}
 
 	@Override
 	public void onCreate() {
@@ -30,7 +39,8 @@ public class BackgroundPlayerService extends Service {
 
 	@Override
 	public IBinder onBind(Intent intent) {
-		return null;
+		debug("onBind()");
+		return mBinder;
 	}
 
 	@Override
@@ -44,19 +54,19 @@ public class BackgroundPlayerService extends Service {
 			//notificationIntent.setFlags(Intent.FLAG_ACTIVITY_REORDER_TO_FRONT | Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_SINGLE_TOP);
 			PendingIntent toMainAppPI = PendingIntent.getActivity(this, 0, notificationIntent, PendingIntent.FLAG_UPDATE_CURRENT);
 
-			Intent previousIntent = new Intent(this, BackgroundPlayerService.class);
+			Intent previousIntent = new Intent(this, MediaPlayerService.class);
 			previousIntent.setAction(Const.ACTION.PREV);
 			PendingIntent prevPI = PendingIntent.getService(this, 0, previousIntent, 0);
 
-			Intent playIntent = new Intent(this, BackgroundPlayerService.class);
+			Intent playIntent = new Intent(this, MediaPlayerService.class);
 			playIntent.setAction(Const.ACTION.PLAY);
 			PendingIntent playPI = PendingIntent.getService(this, 0, playIntent, 0);
 
-			Intent nextIntent = new Intent(this, BackgroundPlayerService.class);
+			Intent nextIntent = new Intent(this, MediaPlayerService.class);
 			nextIntent.setAction(Const.ACTION.NEXT);
 			PendingIntent nextPI = PendingIntent.getService(this, 0, nextIntent, 0);
 
-			Intent stopIntent = new Intent(this, BackgroundPlayerService.class);
+			Intent stopIntent = new Intent(this, MediaPlayerService.class);
 			stopIntent.setAction(Const.ACTION.STOP_FOREGROUND);
 			PendingIntent stopPI = PendingIntent.getService(this, 0, stopIntent, 0);
 
@@ -107,6 +117,17 @@ public class BackgroundPlayerService extends Service {
 		//return super.onStartCommand(intent, flags, startId);
 		return START_STICKY;
 	}
+
+	// client methods
+	public IPlayer getPlayer() {
+		debug("getPlayer()");
+		if (mPlayer == null) {
+			mPlayer = new Player(getApplicationContext());
+		}
+		return mPlayer;
+	}
+
+
 
 	private void debug(String s, Object ... args) {
 		Log.d(this.getClass().getSimpleName(), String.format(s, args));
