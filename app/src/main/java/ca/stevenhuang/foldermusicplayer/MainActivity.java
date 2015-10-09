@@ -30,6 +30,8 @@ import com.mikepenz.materialdrawer.model.SecondaryDrawerItem;
 import com.mikepenz.materialdrawer.model.interfaces.IDrawerItem;
 
 import java.io.File;
+import java.util.Arrays;
+import java.util.HashSet;
 
 import ca.stevenhuang.foldermusicplayer.MusicEqualizer.EqualizerFragment;
 import ca.stevenhuang.foldermusicplayer.MusicLibraryNav.LibraryFragment;
@@ -174,7 +176,12 @@ public class MainActivity extends AppCompatActivity {
 					}
 				})
 				.append(leftDrawer);
+	}
 
+	@Override
+	public void onResume() {
+		super.onResume();
+		debug("binding to service from onrsume");
 		Intent bindIntent = new Intent(MainActivity.this, MediaPlayerService.class);
 		//bindIntent.setAction(Const.ACTION.START_FOREGROUND);
 		//startService(bindIntent);
@@ -249,6 +256,7 @@ public class MainActivity extends AppCompatActivity {
 	protected void onStop() {
 		super.onStop();
 		if (mBound) {
+			debug("unbound from stop");
 			mBound = false;
 			unbindService(mConnection);
 		}

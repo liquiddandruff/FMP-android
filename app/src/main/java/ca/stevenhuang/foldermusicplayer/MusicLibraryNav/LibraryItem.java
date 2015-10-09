@@ -8,6 +8,8 @@ import com.mikepenz.iconics.typeface.FontAwesome;
 import java.io.File;
 import java.util.ArrayList;
 
+import ca.stevenhuang.foldermusicplayer.Player;
+
 /**
  * Created by Steven on 3/6/2015.
  */
@@ -41,14 +43,14 @@ public abstract class LibraryItem {
 	abstract int getTag();
 	abstract FontAwesome.Icon getIcon();
 
-	static ArrayList<LibraryItem> fromFileList (File fileList[]) {
-		ArrayList<LibraryItem> items = new ArrayList<>(fileList.length);
-		for(int i = 0; i < fileList.length; i++) {
-			final File file = fileList[i];
-			if(file.isFile()){
-				items.add(new LibraryFile(file));
-			} else if(file.isDirectory()) {
+	static ArrayList<LibraryItem> fromFileList (ArrayList<File> fileList) {
+		ArrayList<LibraryItem> items = new ArrayList<>(fileList.size());
+		for(int i = 0; i < fileList.size(); i++) {
+			final File file = fileList.get(i);
+			if(file.isDirectory()){
 				items.add(new LibraryFolder(file));
+			} else {
+				items.add(new LibraryFile(file));
 			}
 		}
 		return items;

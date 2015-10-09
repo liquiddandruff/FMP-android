@@ -12,11 +12,12 @@ import android.widget.ListView;
 
 import java.io.File;
 import java.util.ArrayList;
-import java.util.Arrays;
+import java.util.Collections;
 
 import ca.stevenhuang.foldermusicplayer.BaseFragment;
 import ca.stevenhuang.foldermusicplayer.Const;
 import ca.stevenhuang.foldermusicplayer.MainActivity;
+import ca.stevenhuang.foldermusicplayer.Player;
 import ca.stevenhuang.foldermusicplayer.R;
 import de.keyboardsurfer.android.widget.crouton.Crouton;
 import de.keyboardsurfer.android.widget.crouton.Style;
@@ -30,8 +31,8 @@ public class LibraryFragment extends BaseFragment {
 
 	private File mRootDir;
 	private File mCurrDir;
-	private File[] mCurrDirFolders;
-	private File[] mCurrDirFiles;
+	private ArrayList<File> mCurrDirFolders;
+	private ArrayList<File> mCurrDirFiles;
 	private int mCurrDirMarker = -1;
 	private ArrayList<LibraryItem> mCurrDirAdapterData;
 
@@ -70,13 +71,13 @@ public class LibraryFragment extends BaseFragment {
 			public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
 				if (mCurrDirFolders != null && mCurrDirFiles != null && position >= 0) {
 					File clicked;
-					if (position < mCurrDirFolders.length) {
+					if (position < mCurrDirFolders.size()) {
 						mCurrDirMarker = fileList.getFirstVisiblePosition();
-						clicked = mCurrDirFolders[position];
+						clicked = mCurrDirFolders.get(position);
 						changeDirTo(clicked);
 						scrollTo(0);
-					} else if (position - mCurrDirFolders.length < mCurrDirFiles.length) {
-						clicked = mCurrDirFiles[position - mCurrDirFolders.length];
+					} else if (position - mCurrDirFolders.size() < mCurrDirFiles.size()) {
+						clicked = mCurrDirFiles.get(position - mCurrDirFolders.size());
 						view.setSelected(true);
 						if(mOnFileSelectionListener != null) {
 							mOnFileSelectionListener.onFileSelection(clicked);
@@ -94,11 +95,11 @@ public class LibraryFragment extends BaseFragment {
 			@Override
 			public boolean onItemLongClick(AdapterView<?> parent, View view, int position, long id) {
 				File clicked;
-				if (position < mCurrDirFolders.length) {
+				if (position < mCurrDirFolders.size()) {
 					mCurrDirMarker = fileList.getFirstVisiblePosition();
-					clicked = mCurrDirFolders[position];
-				} else if (position - mCurrDirFolders.length < mCurrDirFiles.length) {
-					clicked = mCurrDirFiles[position - mCurrDirFolders.length];
+					clicked = mCurrDirFolders.get(position);
+				} else if (position - mCurrDirFolders.size() < mCurrDirFiles.size()) {
+					clicked = mCurrDirFiles.get(position - mCurrDirFolders.size());
 				} else {
 					return false;
 				}
@@ -134,31 +135,25 @@ public class LibraryFragment extends BaseFragment {
 		debug("Changing dir to %s", dir.getPath());
 		mCurrDir = dir;
 
-		int numFolders = 0, numFiles = 0;
+		mCurrDirFolders = new ArrayList<>();
+		mCurrDirFiles = new ArrayList<>();
 		File[] contents = dir.listFiles();
 		for(File file : contents) {
 			if(file.isDirectory()) {
-				numFolders++;
+				mCurrDirFolders.add(file);
 			} else {
-				numFiles++;
+				if(Player.isExtensionPlayable(file)) {
+					mCurrDirFiles.add(file);
+				}
 			}
 		}
-		mCurrDirFolders = new File[numFolders];
-		mCurrDirFiles = new File[numFiles];
-		for(int i = 0, folderIndex = 0, fileIndex = 0; i < numFolders + numFiles; i++) {
-			final File currFile = contents[i];
-			if(currFile.isDirectory()) {
-				mCurrDirFolders[folderIndex++] = currFile;
-			} else {
-				mCurrDirFiles[fileIndex++] = currFile;
-			}
-		}
-		Arrays.sort(mCurrDirFolders);
-		Arrays.sort(mCurrDirFiles);
+
+		Collections.sort(mCurrDirFolders);
+		Collections.sort(mCurrDirFiles);
 		ArrayList<LibraryItem> t1 = LibraryItem.fromFileList(mCurrDirFolders);
 		ArrayList<LibraryItem> t2 = LibraryItem.fromFileList(mCurrDirFiles);
 		mCurrDirAdapterData.clear();
-		mCurrDirAdapterData.ensureCapacity(numFiles + numFolders);
+		mCurrDirAdapterData.ensureCapacity(t1.size() + t2.size());
 		mCurrDirAdapterData.addAll(t1);
 		mCurrDirAdapterData.addAll(t2);
 		debug("size of data %s", mCurrDirAdapterData.size());

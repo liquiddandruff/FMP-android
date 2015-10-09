@@ -6,6 +6,7 @@ import android.media.MediaPlayer;
 import android.os.PowerManager;
 import android.util.Log;
 
+import java.io.File;
 import java.util.Arrays;
 import java.util.HashSet;
 
@@ -43,8 +44,29 @@ public class Player implements IPlayer{
 	}
 
 	@Override
+	public boolean isPlaying() {
+		return mPlayer.isPlaying();
+	}
+
+	@Override
+	public boolean pause() {
+		mPlayer.pause();
+		return true;
+	}
+
+	@Override
+	public boolean resume() {
+		try {
+			mPlayer.start();
+			return currentPlayable != null;
+		} catch (Exception e) {
+			return false;
+		}
+	}
+
+	@Override
 	public boolean play() {
-		return play(currentPlayable);
+		return currentPlayable != null && play(currentPlayable);
 	}
 
 	@Override
@@ -71,16 +93,15 @@ public class Player implements IPlayer{
 		return currentPlayable;
 	}
 
-	@Override
-	public boolean isExtensionPlayable(Playable playable) {
-		final String fileName = playable.toString();
+	static public boolean isExtensionPlayable(File file) {
+		final String fileName = file.toString();
 		final int lastDotIndex = fileName.lastIndexOf('.');
 		String fileExt = fileName.substring(lastDotIndex + 1);
 		return !fileExt.equals("") && PLAYABLE_FILE_TYPES.contains(fileExt);
 	}
 
 	@Override
-	public HashSet<String> getPlayableFileTypes() {
-		return PLAYABLE_FILE_TYPES;
+	public void destroy() {
+		mPlayer.release();
 	}
 }

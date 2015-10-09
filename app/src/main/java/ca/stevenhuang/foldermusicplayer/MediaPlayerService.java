@@ -35,6 +35,7 @@ public class MediaPlayerService extends Service {
 	public void onDestroy() {
 		super.onDestroy();
 		debug("onDestroy");
+		mPlayer.destroy();
 	}
 
 	@Override
@@ -106,12 +107,18 @@ public class MediaPlayerService extends Service {
 			debug("Clicked prev");
 		} else if (intent.getAction().equals(Const.ACTION.PLAY)) {
 			debug("Clicked play");
+			if(mPlayer.isPlaying()) {
+				mPlayer.pause();
+			} else {
+				mPlayer.resume();
+			}
 		} else if (intent.getAction().equals(Const.ACTION.NEXT)) {
 			debug("Clicked next");
 		} else if (intent.getAction().equals(Const.ACTION.STOP_FOREGROUND)) {
 			debug("Clicked stop");
 			stopForeground(true);
 			stopSelf();
+			mPlayer.pause();
 		}
 		//intent.getStringArrayExtra(Const.SERVICE_KEY_META)
 		//return super.onStartCommand(intent, flags, startId);
