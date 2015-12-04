@@ -19,11 +19,11 @@
 		<item name="colorPrimary">@color/primary</item>
 		<item name="colorPrimaryDark">@color/primary_dark</item>
 		<!-- AboutLibraries DARK colors -->
-		<item name="about_libraries_window_background">@color/list_view_dark_default</item>
-		<item name="about_libraries_card">@color/dark2</item>
+		<item name="about_libraries_window_background">@color/list_view_dark_focused</item>
+		<item name="about_libraries_card">@color/list_view_dark_default</item>
 		<item name="about_libraries_title_openSource">#ffffffff</item>
 		<item name="about_libraries_text_openSource">#DEDEDE</item>
-		<item name="about_libraries_special_button_openSource">@color/about_libraries_special_button_openSource</item>
+		<item name="about_libraries_special_button_openSource">#ffffffff</item>
 		<item name="about_libraries_dividerDark_openSource">#303030</item>
 		<item name="about_libraries_dividerLight_openSource">#303030</item>
 	</style>

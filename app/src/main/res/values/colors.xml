@@ -4,7 +4,7 @@
 	<color name="dark1">#ff212121</color>
 
 	<color name="list_view_dark_pressed">#ff3f3f3f</color>
-	<color name="list_view_dark_selected">#ff3f0e30</color>
+	<color name="list_view_dark_selected">#ff37474f</color>
 	<color name="list_view_dark_focused">#ff3f260f</color>
 	<color name="list_view_dark_default">#ff212121</color>
 	<color name="list_view_light_pressed">#ff3f3f3f</color>
@@ -39,8 +39,9 @@
 
 	<!-- AboutLibraries DARK colors -->
 	<color name="about_libraries_accent">@color/primary</color>
+
+	<color name="theme_window_background">@color/dark2</color>
 	<!--
-	<color name="theme_window_background">#303030</color>
 	<color name="about_libraries_card">#666666</color>
 	<color name="about_libraries_title_openSource">#ffffffff</color>
 	<color name="about_libraries_text_openSource">#DEDEDE</color>

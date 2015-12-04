@@ -14,7 +14,5 @@ public final class Const {
 		public static final String STOP_FOREGROUND = "ca.stevenhuang.foldermusicplayer.stop_foreground";
 	}
 
-	public final class NOTIFICATION_ID {
-		public static final int FOREGROUND_SERVICE = 1337;
-	}
+	public static final int NOTIFICATION_ID = 1337;
 }

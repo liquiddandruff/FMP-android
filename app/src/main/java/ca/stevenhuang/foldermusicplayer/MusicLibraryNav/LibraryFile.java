@@ -1,9 +1,8 @@
 package ca.stevenhuang.foldermusicplayer.MusicLibraryNav;
 
-import com.mikepenz.iconics.typeface.FontAwesome;
+import com.mikepenz.fontawesome_typeface_library.FontAwesome;
 
 import java.io.File;
-import java.util.LinkedList;
 
 /**
  * Created by Steven on 3/6/2015.

@@ -3,10 +3,11 @@ package ca.stevenhuang.foldermusicplayer.MusicLibraryNav;
 import android.view.KeyEvent;
 import android.view.View;
 
-import com.mikepenz.iconics.typeface.FontAwesome;
+import com.mikepenz.fontawesome_typeface_library.FontAwesome;
 
 import java.io.File;
 import java.util.ArrayList;
+import java.util.Comparator;
 
 import ca.stevenhuang.foldermusicplayer.Player;
 
@@ -54,5 +55,32 @@ public abstract class LibraryItem {
 			}
 		}
 		return items;
+	}
+
+	public static class Comparators {
+		public static Comparator<LibraryItem> FILE = new Comparator<LibraryItem>() {
+			@Override
+			public int compare(LibraryItem a, LibraryItem b) {
+				return a.file.compareTo(b.file);
+			}
+		};
+	}
+
+	public static class NavigationData {
+		public File dir;
+		public int firstVisibleItemPosition;
+		public int getFirstVisibleItemPositionTopOffset;
+
+		public NavigationData(File dir, int firstVisibleItemPosition, int firstVisibleItemPositionTopOffset) {
+			this.dir = dir;
+			this.firstVisibleItemPosition = firstVisibleItemPosition;
+			this.getFirstVisibleItemPositionTopOffset = firstVisibleItemPositionTopOffset;
+		}
+
+		public NavigationData(NavigationData other) {
+			this.dir = other.dir;
+			this.firstVisibleItemPosition = other.firstVisibleItemPosition;
+			this.getFirstVisibleItemPositionTopOffset = other.getFirstVisibleItemPositionTopOffset;
+		}
 	}
 }

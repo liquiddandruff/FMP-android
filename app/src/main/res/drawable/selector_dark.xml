@@ -1,5 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <selector xmlns:android="http://schemas.android.com/apk/res/android">
-    <item android:state_pressed="true" android:drawable="@color/dark2" />
-    <item android:drawable="@color/list_view_dark_default" />
+	<!-- selected -->
+	<item android:drawable="@color/list_view_dark_selected" android:state_pressed="false" android:state_selected="true" />
+	<!-- not selected -->
+	<item android:drawable="@color/list_view_dark_default" android:state_selected="false" />
 </selector>

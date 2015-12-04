@@ -6,10 +6,12 @@ import android.content.Intent;
 import android.content.ServiceConnection;
 import android.graphics.Color;
 import android.media.MediaMetadataRetriever;
+import android.os.Build;
 import android.os.Environment;
 import android.os.IBinder;
 import android.support.v4.app.FragmentTransaction;
 import android.os.Bundle;
+import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
@@ -18,20 +20,19 @@ import android.view.KeyEvent;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
-import android.widget.AdapterView;
+import android.view.WindowManager;
 
 import com.mikepenz.aboutlibraries.LibsBuilder;
 import com.mikepenz.iconics.IconicsDrawable;
-import com.mikepenz.iconics.typeface.FontAwesome;
+import com.mikepenz.fontawesome_typeface_library.FontAwesome;
 import com.mikepenz.materialdrawer.Drawer;
+import com.mikepenz.materialdrawer.DrawerBuilder;
 import com.mikepenz.materialdrawer.model.DividerDrawerItem;
 import com.mikepenz.materialdrawer.model.PrimaryDrawerItem;
 import com.mikepenz.materialdrawer.model.SecondaryDrawerItem;
 import com.mikepenz.materialdrawer.model.interfaces.IDrawerItem;
 
 import java.io.File;
-import java.util.Arrays;
-import java.util.HashSet;
 
 import ca.stevenhuang.foldermusicplayer.MusicEqualizer.EqualizerFragment;
 import ca.stevenhuang.foldermusicplayer.MusicLibraryNav.LibraryFragment;
@@ -50,8 +51,8 @@ public class MainActivity extends AppCompatActivity {
 	private static boolean mBound;
 	private static MediaMetadataRetriever mMetadata;
 	private IPlayer mPlayer;
-	private Drawer.Result leftDrawer;
-	private Drawer.Result rightDrawer;
+	private Drawer leftDrawer;
+	private Drawer rightDrawer;
 	private File rootMusicDir;
 
 	public void notifyResult(boolean played) {
@@ -134,7 +135,7 @@ public class MainActivity extends AppCompatActivity {
 		mMetadata = new MediaMetadataRetriever();
 
 
-		leftDrawer = new Drawer()
+		leftDrawer = new DrawerBuilder()
 				.withActivity(this)
 				.withToolbar(toolbar)
 				.withDrawerWidthDp(255)
@@ -146,23 +147,24 @@ public class MainActivity extends AppCompatActivity {
 				)
 				.withOnDrawerItemClickListener(new Drawer.OnDrawerItemClickListener() {
 					@Override
-					public void onItemClick(AdapterView<?> parent, View view, int position, long id, IDrawerItem drawerItem) {
+					public boolean onItemClick(View view, int position, IDrawerItem drawerItem) {
 						FragmentTransaction fragTrans = getSupportFragmentManager().beginTransaction();
 						switch (drawerItem.getIdentifier()) {
 							case DRAWER_MUSIC_ID: {
 								switchToLibraryFragment(fragTrans);
-								break;
-							}
-							case DRAWER_SETTINGS_ID: {
+								return false;
+							} case DRAWER_SETTINGS_ID: {
 								switchToEqualizerFragment(fragTrans);
-								break;
+								return false;
+							} default: {
+								return true;
 							}
 						}
 					}
 				})
 				.build();
 
-		rightDrawer = new Drawer()
+		rightDrawer = new DrawerBuilder()
 				.withActivity(this)
 				.withDrawerGravity(Gravity.RIGHT)
 				.addDrawerItems(
@@ -172,10 +174,16 @@ public class MainActivity extends AppCompatActivity {
 				)
 				.withOnDrawerItemClickListener(new Drawer.OnDrawerItemClickListener() {
 					@Override
-					public void onItemClick(AdapterView<?> parent, View view, int position, long id, IDrawerItem drawerItem) {
+					public boolean onItemClick(View view, int position, IDrawerItem drawerItem) {
+						return false;
 					}
 				})
 				.append(leftDrawer);
+
+		if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+			getWindow().addFlags(WindowManager.LayoutParams.FLAG_DRAWS_SYSTEM_BAR_BACKGROUNDS);
+			getWindow().setStatusBarColor(ContextCompat.getColor(this, R.color.primary_dark));
+		}
 	}
 
 	@Override
