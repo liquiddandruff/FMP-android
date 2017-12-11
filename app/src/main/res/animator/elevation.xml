@@ -9,11 +9,11 @@
 			android:valueFrom="0dip"
 			android:valueTo="4dip"
 			android:valueType="floatType" />
-		<objectAnimator
-			android:duration="100"
-			android:propertyName="scaleY"
-			android:valueTo="1.3"
-			android:valueType="floatType" />
+		<!--<objectAnimator-->
+			<!--android:duration="100"-->
+			<!--android:propertyName="scaleY"-->
+			<!--android:valueTo="1.3"-->
+			<!--android:valueType="floatType" />-->
 	</item>
 	<item>
 		<objectAnimator
@@ -22,10 +22,10 @@
 			android:valueFrom="4dip"
 			android:valueTo="0dip"
 			android:valueType="floatType" />
-		<objectAnimator
-			android:duration="100"
-			android:propertyName="scaleY"
-			android:valueTo="1"
-			android:valueType="floatType" />
+		<!--<objectAnimator-->
+			<!--android:duration="100"-->
+			<!--android:propertyName="scaleY"-->
+			<!--android:valueTo="1"-->
+			<!--android:valueType="floatType" />-->
 	</item>
 </selector>

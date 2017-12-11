@@ -55,7 +55,7 @@ public class LibraryAdapter extends RecyclerView.Adapter<LibraryAdapter.LibraryI
 		itemViewHolder.icon.setImageDrawable(new IconicsDrawable(mContext, item.getIcon()).sizeDp(30).color(Color.WHITE));
 		itemViewHolder.title.setText(item.getTitle());
 		itemViewHolder.subtitle.setText(item.getSubtitle());
-		itemViewHolder.container.setStateListAnimator(AnimatorInflater.loadStateListAnimator(mContext, R.anim.elevation));
+		itemViewHolder.container.setStateListAnimator(AnimatorInflater.loadStateListAnimator(mContext, R.animator.elevation));
 		//setAnimation(itemViewHolder.container, pos);
 	}
 
